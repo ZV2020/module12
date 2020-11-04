@@ -11,6 +11,7 @@ const colorInput = document.querySelector('.color__input'); // поле с на�
 const weightInput = document.querySelector('.weight__input'); // поле с весом
 const addActionButton = document.querySelector('.add__action__btn'); // кнопка добавления
 
+
 // список фруктов в JSON формате
 let fruitsJSON = `[
   {"kind": "Мангустин", "color": "фиолетовый", "weight": 13},
@@ -22,8 +23,7 @@ let fruitsJSON = `[
 
 // преобразование JSON в объект JavaScript
 let fruits = JSON.parse(fruitsJSON);
-// let oldFruit = [];
-console.log(fruits);
+
 /*** ОТОБРАЖЕНИЕ ***/
 
 // отрисовка карточек
@@ -40,7 +40,6 @@ const display = () => {
                        <div>weight (кг): ${fruits[i].weight}</div>
                      </div>`
     fruitsList.append(newLi);
-    // console.log(i);
     
   }
 };
@@ -66,42 +65,53 @@ const getRandomInt = (min, max) => {
 // перемешивание массива
 const shuffleFruits = () => {
   let result = [];
+  const fruits_old = [...fruits];
+
   while (fruits.length > 0) {
     const i = getRandomInt(0, fruits.length - 1)
     result.push(fruits[i]);
     fruits.splice(i, 1);
   }
 
+  if(JSON.stringify(fruits_old)==JSON.stringify(fruits)){
+    alert ('Порядок не изменился!')
+  };
+
   fruits = result;
-  
- 
+  // console.log(fruits_old);
+  // console.log(not_shuffled);
+  // console.log(fruits);
 };
 
+// let not_shuffled = fruits.every((element, index) => element == fruits_old[index]);
 
 shuffleButton.addEventListener('click', () => {
+
   if (fruits.length<=1){
-    warning('Тут нечего перемешивать');
+    alert('Тут нечего перемешивать');
     return false;
   }
 
-  // if (newArr == fruits) {
-  //   window.alert ("Ничего не изменилось! Попробуйте ещё раз.");
-  // }
+  
 
-  shuffleFruits();
-  display();
+shuffleFruits();
+display();  
 });
+
 
 /*** ФИЛЬТРАЦИЯ ***/
 
 // фильтрация массива
 const filterFruits = () => {
+  var minweight = document.getElementById("minweight__input").value;
+  var maxweight = document.getElementById("maxweight__input").value;
   fruits.filter((item) => {
-    // TODO: допишите функцию
-  });
+    return item.weight > minweight && item.weight < maxweight; 
+   });
 };
 
 filterButton.addEventListener('click', () => {
+  console.log(fruits)
   filterFruits();
   display();
 });
