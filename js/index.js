@@ -102,16 +102,17 @@ display();
 /*** ФИЛЬТРАЦИЯ ***/
 
 // фильтрация массива
+
+var minweight = document.getElementById("minweight__input").value;
+var maxweight = document.getElementById("maxweight__input").value;
+
 const filterFruits = () => {
-  var minweight = document.getElementById("minweight__input").value;
-  var maxweight = document.getElementById("maxweight__input").value;
   fruits.filter((item) => {
-    return item.weight > minweight && item.weight < maxweight; 
+    return item.weight >= minweight && item.weight <= maxweight; 
    });
 };
 
 filterButton.addEventListener('click', () => {
-  console.log(fruits)
   filterFruits();
   display();
 });
