@@ -98,23 +98,31 @@ shuffleFruits();
 display();  
 });
 
-
 /*** ФИЛЬТРАЦИЯ ***/
 
-// фильтрация массива
-
-var minweight = document.getElementById("minweight__input").value;
-var maxweight = document.getElementById("maxweight__input").value;
+const minWeightInput = document.querySelector('.minweight__input'); // поле для ввода минимального веса
+const maxWeightInput = document.querySelector('.maxweight__input'); // поле для ввода максимального веса
+const fruitsWeight = [...new Set(fruits.map(el => el.weight))]; //Получим массив уникальных весов фруктов
+var minWeight = 1;
+var maxWeight = 100;
 
 const filterFruits = () => {
-  fruits.filter((item) => {
-    return item.weight >= minweight && item.weight <= maxweight; 
-   });
+ return fruits.filter((item) => {
+   return item.weight >= minWeight && item.weight <= maxWeight;
+ });
 };
-
 filterButton.addEventListener('click', () => {
-  filterFruits();
-  display();
+ if (minWeightInput.value != "" && maxWeightInput.value !="" ) {
+ // запомним введенное пользователем минимальное значение в переменной
+ minWeight = parseInt(minWeightInput.value);
+ // запомним введенное пользователем максимальное значение в переменной
+ maxWeight = parseInt(maxWeightInput.value);
+ //фильтруем
+ fruits = filterFruits();
+ display();
+ } else {
+   alert ('Введите min и max weight')
+ };
 });
 
 /*** СОРТИРОВКА ***/
