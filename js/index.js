@@ -62,7 +62,6 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-// перемешивание массива
 const shuffleFruits = () => {
   let result = [];
   const fruits_old = [...fruits];
@@ -91,9 +90,6 @@ shuffleButton.addEventListener('click', () => {
     alert('Тут нечего перемешивать');
     return false;
   }
-
-  
-
 shuffleFruits();
 display();  
 });
@@ -130,18 +126,83 @@ filterButton.addEventListener('click', () => {
 let sortKind = 'bubbleSort'; // инициализация состояния вида сортировки
 let sortTime = '-'; // инициализация состояния времени сортировки
 
-const comparationColor = (a, b) => {
-  // TODO: допишите функцию сравнения двух элементов по цвету
+const priorityColor = {
+  "фиолетовый": 2,
+  "зеленый": 1,
+  "розово-красный": 3,
+  "желтый": 0,
+  "светло-коричневый": 4
+};
+
+const comparationColor = (fruit1, fruit2) => {
+  return priorityColor[fruit1.color] > priorityColor[fruit2.color];
+  //fruit1 и fruit2 это структура вида fruit: {kind: "Мангустин", color: "фиолетовый", weight: 13}
 };
 
 const sortAPI = {
-  bubbleSort(arr, comparation) {
-    // TODO: допишите функцию сортировки пузырьком
+  bubbleSort(arr, comparation) { // arr - массив, который нужно отсортировать по возрастанию.
+     const n = arr.length;
+     // внешняя итерация по элементам
+     for (let i = 0; i < n-1; i++) {
+         // внутренняя итерация для перестановки элемента в конец массива
+         for (let j = 0; j < n-1-i; j++) {
+             // сравниваем элементы
+             if (comparation(arr[j], arr[j+1])) {
+                 // делаем обмен элементов
+                 let temp = arr[j+1];
+                 arr[j+1] = arr[j];
+                 arr[j] = temp;
+             }
+         }
+     }
   },
 
-  quickSort(arr, comparation) {
-    // TODO: допишите функцию быстрой сортировки
+  quickSort(items, comparation, left, right) {
+    function quickSort_main(items,  comparation, left, right) {
+      // функция разделитель
+        function partition(items, left, right) {
+          var pivot = items[Math.floor((right + left) / 2)],
+            i = left,
+            j = right;
+          while (i <= j) {
+      //        while (items[i] < pivot) {
+              while (comparation(pivot, items[i])) {
+                  i++;
+              }
+      //        while (items[j] > pivot) {
+              while (comparation(items[j], pivot)) {
+                  j--;
+              }
+              if (i <= j) {
+                  swap(items, i, j);
+                  i++;
+                  j--;
+              }
+          }
+          return i;
+        };
+          function swap (items, firstIndex, secondIndex) {
+            const temp = items[firstIndex];
+            items[firstIndex] = items[secondIndex];
+            items[secondIndex] = temp;
+          };
+          var index;
+          if (items.length > 1) {
+              left = typeof left != "number" ? 0 : left;
+              right = typeof right != "number" ? items.length - 1 : right;
+              index = partition(items, left, right);
+              if (left < index - 1) {
+                quickSort_main(items, comparation, left, index - 1);
+              }
+              if (index < right) {
+                quickSort_main(items, comparation, index, right);
+              }
+          }
+        return items;
+      };
   },
+
+  
 
   // выполняет сортировку и производит замер времени
   startSort(sort, arr, comparation) {
@@ -149,6 +210,7 @@ const sortAPI = {
     sort(arr, comparation);
     const end = new Date().getTime();
     sortTime = `${end - start} ms`;
+    sortTimeLabel.textContent = sortTime;
   },
 };
 
